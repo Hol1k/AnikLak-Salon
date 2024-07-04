@@ -11,6 +11,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.6">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AnikarSalon.DataPersistence.PostgreSQL\AnikarSalon.DataPersistence.PostgreSQL.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Update="wwwroot\Images\IconLocation.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
