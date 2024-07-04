@@ -57,9 +57,11 @@ a {
     font-size: 18px;
     color: #E9E9E9;
     text-decoration: none;
+    cursor: pointer;
 }
 
 .header-links a:hover {
+    cursor: pointer;
     text-decoration: underline;
 }
 
