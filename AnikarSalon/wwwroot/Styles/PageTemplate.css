@@ -1,0 +1,121 @@
+﻿:root {
+    --header-color: #7E7566;
+    --background-gradient: linear-gradient(115.16deg, #C2B090 8.99%, #D9D1C5 94.28%);
+    --footer-gradient: linear-gradient(180deg, #C1AD8C 0%, #A5967D 92.06%);
+    --left-right-page-margin: calc(98px + 5%);
+    --button-color: #AD8C55;
+    --section-color: #FAEFDE;
+    --unactive-section-color: #A19A8D;
+    --link-color: #AA7823;
+    --emphasized-text-color: #664104;
+    --registration-time-color: rgba(0, 0, 0, 0.4);
+    --selected-registration-time-color: #C28113;
+    --section-shadow: 0px 4px 15px 1px rgba(0, 0, 0, 0.25);
+    --section-border-radius: 15px;
+    --blick-margin: 7px;
+}
+
+body {
+    background: var(--background-gradient);
+    background-attachment: fixed;
+    background-size: 100% 100%;
+    background-position: center center;
+    background-repeat: no-repeat;
+    font-family: verdana;
+    margin: 70px var(--left-right-page-margin) 0 var(--left-right-page-margin);
+    min-block-size: calc(100vh - 70px);
+}
+
+a {
+    color: var(--link-color);
+}
+
+.header {
+    background: var(--header-color);
+    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
+    position: fixed;
+    width: 100%;
+    height: 70px;
+    left: 0px;
+    top: 0px;
+}
+
+.title {
+    top: calc(50% - 32px/2);
+    position: absolute;
+    left: var(--left-right-page-margin);
+    width: 167px;
+    height: 32px;
+}
+
+.header-links {
+    position: absolute;
+    top: 26px;
+}
+
+.header-links a {
+    font-size: 18px;
+    color: #E9E9E9;
+    text-decoration: none;
+}
+
+.header-links a:hover {
+    text-decoration: underline;
+}
+
+#services {
+    left: calc(var(--left-right-page-margin) + 168px + 4%);
+}
+
+#gallery {
+    left: calc(var(--left-right-page-margin) + 168px + 4% + 72px + 4%);
+}
+
+#team {
+    left: calc(var(--left-right-page-margin) + 168px + 4% + 72px + 4% + 83px + 4%);
+}
+
+#contacts {
+    left: calc(var(--left-right-page-margin) + 168px + 4% + 72px + 4% + 83px + 4% + 155px + 4%);
+}
+
+#user {
+    right: var(--left-right-page-margin);
+}
+
+.footer {
+    background: var(--footer-gradient);
+    box-shadow: 0px 9px 15.9px 1px rgba(0, 0, 0, 0.25);
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 50px;
+}
+
+.item-of-footer {
+    position: absolute;
+    top: calc(50% - 16px);
+}
+
+.item-of-footer span {
+    position: absolute;
+    white-space: nowrap;
+    top: calc(50% - 0.7em);
+}
+
+#number {
+    left: var(--left-right-page-margin);
+}
+
+#location {
+    left: calc(var(--left-right-page-margin) + 230px + 4%);
+}
+
+#mail {
+    left: calc(var(--left-right-page-margin) + 230px + 4% + 250px + 4%);
+}
+
+#telegram {
+    right: var(--left-right-page-margin);
+}

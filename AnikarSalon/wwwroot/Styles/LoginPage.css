@@ -1,0 +1,55 @@
+﻿:root {
+    --auth-block-height: 66px;
+    --auth-block-width: 390px;
+}
+
+form {
+    position: absolute;
+    top: calc(50% - (var(--auth-block-height)*3 + var(--blick-margin)*2)/2);
+    left: calc(50% - var(--auth-block-width)/2 - var(--blick-margin));
+}
+
+form input {
+    margin: var(--blick-margin);
+    height: var(--auth-block-height);
+    width: var(--auth-block-width);
+    background: var(--section-color);
+    box-shadow: var(--section-shadow);
+    border-radius: var(--section-border-radius);
+    border: none;
+    font-size: 20px;
+    text-indent: 1em;
+}
+
+form input[type="submit"] {
+    background: var(--button-color);
+    text-indent: 0px;
+    color: white;
+}  
+
+form input[type="submit"]:hover {
+    cursor: pointer;
+}  
+
+form input[type="submit"]:hover {
+    box-shadow: var(--section-shadow), inset 3px 3px 4px rgba(0, 0, 0, 0.25)
+}
+
+form input[type="text"]:focus, form input[type="password"]:focus {
+    outline: none;
+    font-size: 20px;
+    text-indent: 1em;
+}
+
+form div{
+    position: absolute;
+    width: 100%;
+    font-size: 20px;
+    text-align: center;
+    text-indent: 0;
+    color: #767576;
+}
+
+form div a{
+    color: var(--link-color);
+}
