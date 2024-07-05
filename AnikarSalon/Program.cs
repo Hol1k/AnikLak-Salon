@@ -1,4 +1,13 @@
+using AnikarSalon.Persistence.Postgres;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<SalonDbContext>(options =>
+{
+    options.UseNpgsql(builder.Configuration.GetConnectionString(nameof(SalonDbContext)));
+});
+
 var app = builder.Build();
 
 app.UseStaticFiles();
