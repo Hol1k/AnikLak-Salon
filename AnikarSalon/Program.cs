@@ -4,6 +4,14 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.Cookie.Name = "SessionId";
+    options.IdleTimeout = TimeSpan.FromHours(1);
+    options.Cookie.IsEssential = true;
+});
+
 builder.Services.AddDbContext<SalonDbContext>(options =>
 {
     options.UseNpgsql(builder.Configuration.GetConnectionString(nameof(SalonDbContext)));
@@ -18,6 +26,18 @@ builder.Services.AddScoped<OrdersRepository>();
 var app = builder.Build();
 
 app.UseStaticFiles();
+
+app.UseSession();
+
+app.MapGet("/system/username", async (context) =>
+{
+    if (context.Session.Keys.Contains("userId"))
+    {
+        string userName = context.Session.GetString("userId") ?? "Профиль";
+        await context.Response.WriteAsync(userName);
+    }
+    else await context.Response.WriteAsync("");
+});
 
 app.MapGet("/", async (context) =>
 {
