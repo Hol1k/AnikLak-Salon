@@ -1,3 +1,4 @@
+using AnikarSalon.DataPersistence.PostgreSQL.Repositories;
 using AnikarSalon.Persistence.Postgres;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,6 +8,12 @@ builder.Services.AddDbContext<SalonDbContext>(options =>
 {
     options.UseNpgsql(builder.Configuration.GetConnectionString(nameof(SalonDbContext)));
 });
+
+builder.Services.AddScoped<AppointmentsRepository>();
+builder.Services.AddScoped<ClientsRepository>();
+builder.Services.AddScoped<CommentsRepository>();
+builder.Services.AddScoped<MastersRepository>();
+builder.Services.AddScoped<OrdersRepository>();
 
 var app = builder.Build();
 
@@ -35,3 +42,14 @@ app.MapGet("/signup", async (context) =>
 });
 
 app.Run();
+
+RepoType GetRepo<RepoType>() where RepoType : notnull
+{
+    RepoType repository;
+    using (var scope = app.Services.CreateScope())
+    {
+        var services = scope.ServiceProvider;
+        repository = services.GetRequiredService<RepoType>();
+    }
+    return repository;
+}
