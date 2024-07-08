@@ -5,6 +5,7 @@
     <title></title>
     <link rel="stylesheet" type="text/css" href="Styles/PageTemplate.css">
     <link rel="stylesheet" type="text/css" href="Styles/LoginPage.css">
+    <script type="text/javascript" src="Scripts/isLoginDataValid.js"></script>
 </head>
 <body>
     <div class="header">
@@ -15,10 +16,10 @@
         <div class="header-links" id="contacts"><a>Контакты</a></div>
     </div>
     
-    <form>
-        <input type="text" name="username" id="username" placeholder="Номер телефона" /><br />
-        <input type="password" name="password" id="password" placeholder="Пароль" /><br />
-        <input type="submit" id="submit-button" value="Войти" /><br />
+    <form id="form">
+        <input type="text" name="userPhone" id="userPhone" placeholder="Номер телефона" required /><br />
+        <input type="password" name="password" id="password" placeholder="Пароль" required /><br />
+        <input type="button" id="submit-button" value="Войти" onclick="isLoginDataValid()" /><br />
         <div>Нет учетной записи?<a href="../signup">Зарегистрироваться</a>.</div>
     </form>
 </body>

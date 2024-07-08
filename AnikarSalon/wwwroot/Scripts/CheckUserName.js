@@ -1,5 +1,5 @@
 (async () => {
-    let response = await fetch('/system/username', {
+    let response = await fetch('/system/get-username', {
         method: 'GET',
         credentials: 'include'
     });

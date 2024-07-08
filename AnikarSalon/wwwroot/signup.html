@@ -14,12 +14,15 @@
         <div class="header-links" id="team"><a>Наша команда</a></div>
         <div class="header-links" id="contacts"><a>Контакты</a></div>
     </div>
-    
-    <form>
-        <input type="text" name="username" id="username" placeholder="Номер телефона" /><br />
-        <input type="password" name="password" id="password" placeholder="Пароль" /><br />
-        <input type="submit" id="submit-button" value="Зарегистрироваться" /><br />
+
+    <form id="form">
+        <input type="text" name="firstname" id="firstname" placeholder="Имя*" required /><br />
+        <input type="text" name="lastname" id="lastname" placeholder="Фамилия" /><br />
+        <input type="text" name="userPhone" id="userPhone" placeholder="Номер телефона*" required /><br />
+        <input type="password" name="password" id="password" placeholder="Пароль*" required /><br />
+        <input type="button" id="submit-button" value="Зарегистрироваться" onclick="isSignupDataValid()"/><br />
         <div>Или вы хотите <a href="../login">войти</a>?</div>
+        <script type="text/javascript" src="Scripts/isSignupDataValid.js"></script>
     </form>
 </body>
 </html>

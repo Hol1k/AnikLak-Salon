@@ -1,6 +1,9 @@
 using AnikarSalon.DataPersistence.PostgreSQL.Repositories;
 using AnikarSalon.Persistence.Postgres;
+using AnikarSalon.Persistence.Postgres.Models;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,14 +32,62 @@ app.UseStaticFiles();
 
 app.UseSession();
 
-app.MapGet("/system/username", async (context) =>
+app.MapGet("/system/get-username", async (context) =>
 {
-    if (context.Session.Keys.Contains("userId"))
+    if (context.Session.Keys.Contains("username"))
     {
-        string userName = context.Session.GetString("userId") ?? "Профиль";
+        string userName = context.Session.GetString("username") ?? "Профиль";
         await context.Response.WriteAsync(userName);
     }
     else await context.Response.WriteAsync("");
+});
+
+app.MapPost("/system/check-login", async (context) =>
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        ClientsRepository clientsRepo;
+        var services = scope.ServiceProvider;
+        clientsRepo = services.GetRequiredService<ClientsRepository>();
+        var loginData = context.Request.Form;
+
+        ClientEntity? user = await clientsRepo.Login(
+            phoneNumber: PhoneBuilder(loginData["userPhone"].ToString()),
+            password: loginData["password"]);
+
+        if (user != null)
+        {
+            await context.Response.WriteAsync("true");
+        }
+        else
+        {
+            await context.Response.WriteAsync("false");
+        }
+    }
+});
+
+app.MapPost("/system/is-number-occupied", async (context) =>
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        ClientsRepository clientsRepo;
+        var services = scope.ServiceProvider;
+        clientsRepo = services.GetRequiredService<ClientsRepository>();
+        var signupData = context.Request.Form;
+
+        string phoneNumber = PhoneBuilder(signupData["userPhone"].ToString());
+
+        if (await clientsRepo.IsNumberOccupied(phoneNumber))
+        {
+            await context.Response.WriteAsync("true");
+            Console.WriteLine("true");
+        }
+        else
+        {
+            await context.Response.WriteAsync("false");
+            Console.WriteLine("false");
+        }
+    }
 });
 
 app.MapGet("/", async (context) =>
@@ -47,7 +98,31 @@ app.MapGet("/", async (context) =>
 
 app.MapGet("/login", async (context) =>
 {
-    if (context.Request.Query.Count > 0) context.Response.Redirect("/");
+    if (context.Request.Query.Count > 0)
+    {
+        using (var scope = app.Services.CreateScope())
+        {
+            ClientsRepository clientsRepo;
+            var services = scope.ServiceProvider;
+            clientsRepo = services.GetRequiredService<ClientsRepository>();
+            var loginData = context.Request.Query;
+
+            ClientEntity? user = await clientsRepo.Login(
+                phoneNumber: PhoneBuilder(loginData["userPhone"].ToString()),
+                password: loginData["password"].ToString());
+
+            if (user != null)
+            {
+                context.Session.SetString("username", user.FirstName ?? "");
+                context.Session.SetString("userId", user.Id.ToString() ?? "");
+                context.Response.Redirect("/");
+            }
+            else
+            {
+                context.Response.Redirect("/login");
+            }
+        }
+    }
 
     context.Response.ContentType = "text/html; charset=utf-8";
     await context.Response.SendFileAsync("wwwroot/login.html");
@@ -55,7 +130,32 @@ app.MapGet("/login", async (context) =>
 
 app.MapGet("/signup", async (context) =>
 {
-    if (context.Request.Query.Count > 0) context.Response.Redirect("/");
+    if (context.Request.Query.Count > 0)
+    {
+        using (var scope = app.Services.CreateScope())
+        {
+            ClientsRepository clientsRepo;
+            var services = scope.ServiceProvider;
+            clientsRepo = services.GetRequiredService<ClientsRepository>();
+            var userData = context.Request.Query;
+
+            string phoneNumber = PhoneBuilder(userData["userPhone"].ToString());
+
+            ClientEntity newClient = new ClientEntity()
+            {
+                FirstName = userData["firstname"].ToString(),
+                LastName = userData["lastname"].ToString(),
+                Password = userData["password"].ToString(),
+                PhoneNumber = phoneNumber
+            };
+            await clientsRepo.Add(newClient);
+
+            context.Session.SetString("username", newClient.FirstName ?? "");
+            context.Session.SetString("userId", newClient.Id.ToString() ?? "");
+
+            context.Response.Redirect("/");
+        }
+    }
 
     context.Response.ContentType = "text/html; charset=utf-8";
     await context.Response.SendFileAsync("wwwroot/signup.html");
@@ -63,13 +163,17 @@ app.MapGet("/signup", async (context) =>
 
 app.Run();
 
-RepoType GetRepo<RepoType>() where RepoType : notnull
+string PhoneBuilder(string phoneNumber)
 {
-    RepoType repository;
-    using (var scope = app.Services.CreateScope())
+    StringBuilder phoneNumberBuilder = new(phoneNumber);
+    while (phoneNumberBuilder.Length != 11)
     {
-        var services = scope.ServiceProvider;
-        repository = services.GetRequiredService<RepoType>();
+        char[] symbolsToDelete = { ' ', '-', '+', '(', ')', ':', '_' };
+        foreach (char symbol in symbolsToDelete)
+            phoneNumberBuilder.Replace(symbol.ToString(), "");
     }
-    return repository;
+    phoneNumber = phoneNumberBuilder.ToString();
+    phoneNumber = phoneNumber.Remove(0, 1).Insert(0, "8");
+
+    return phoneNumber;
 }

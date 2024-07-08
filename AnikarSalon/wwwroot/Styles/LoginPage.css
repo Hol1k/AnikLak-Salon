@@ -5,7 +5,7 @@
 
 form {
     position: absolute;
-    top: calc(50% - (var(--auth-block-height)*3 + var(--blick-margin)*2)/2);
+    top: calc(50% - (var(--auth-block-height)*5 + var(--blick-margin)*2)/2);
     left: calc(50% - var(--auth-block-width)/2 - var(--blick-margin));
 }
 
@@ -21,17 +21,17 @@ form input {
     text-indent: 1em;
 }
 
-form input[type="submit"] {
+form input[type="button"] {
     background: var(--button-color);
     text-indent: 0px;
     color: white;
-}  
+}
 
-form input[type="submit"]:hover {
+form input[type="button"]:hover {
     cursor: pointer;
-}  
+}
 
-form input[type="submit"]:hover {
+form input[type="button"]:hover {
     box-shadow: var(--section-shadow), inset 3px 3px 4px rgba(0, 0, 0, 0.25)
 }
 
