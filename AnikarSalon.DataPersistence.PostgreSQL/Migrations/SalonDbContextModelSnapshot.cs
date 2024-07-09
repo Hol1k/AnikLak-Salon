@@ -29,6 +29,9 @@ namespace AnikarSalon.DataPersistence.PostgreSQL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<int>("AppointmentDurationByHalfHours")
+                        .HasColumnType("integer");
+
                     b.Property<string>("AppointmentName")
                         .IsRequired()
                         .HasColumnType("text");

@@ -6,6 +6,8 @@
 
         public DateTime DateTime { get; set; } = DateTime.Now;
 
+        public int AppointmentDurationByHalfHours { get; set; } = 0;
+
         public string Status { get; set; } = string.Empty;
 
         public decimal Price { get; set; } = 0;

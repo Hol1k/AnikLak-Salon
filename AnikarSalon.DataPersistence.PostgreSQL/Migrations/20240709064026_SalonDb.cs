@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AnikarSalon.DataPersistence.PostgreSQL.Migrations
 {
     /// <inheritdoc />
-    public partial class salon : Migration
+    public partial class SalonDb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -53,6 +53,7 @@ namespace AnikarSalon.DataPersistence.PostgreSQL.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     DateTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    AppointmentDurationByHalfHours = table.Column<int>(type: "integer", nullable: false),
                     Status = table.Column<string>(type: "text", nullable: false),
                     Price = table.Column<decimal>(type: "numeric", nullable: false),
                     AppointmentName = table.Column<string>(type: "text", nullable: false),

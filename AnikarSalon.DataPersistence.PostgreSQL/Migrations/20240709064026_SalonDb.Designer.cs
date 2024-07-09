@@ -13,8 +13,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AnikarSalon.DataPersistence.PostgreSQL.Migrations
 {
     [DbContext(typeof(SalonDbContext))]
-    [Migration("20240704092430_salon")]
-    partial class salon
+    [Migration("20240709064026_SalonDb")]
+    partial class SalonDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -31,6 +31,9 @@ namespace AnikarSalon.DataPersistence.PostgreSQL.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
+
+                    b.Property<int>("AppointmentDurationByHalfHours")
+                        .HasColumnType("integer");
 
                     b.Property<string>("AppointmentName")
                         .IsRequired()
