@@ -1,0 +1,66 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>AnikLak</title>
+    <link rel="stylesheet" type="text/css" href="Styles/PageTemplate.css">
+    <link rel="stylesheet" type="text/css" href="Styles/RegistrationPage.css">
+</head>
+<body>
+    <div class="header">
+        <a href="/"><img src="Images/Title.png" class="title" /></a>
+        <div class="header-links" id="services"><a>Услуги</a></div>
+        <div class="header-links" id="gallery"><a>Галерея</a></div>
+        <div class="header-links" id="team"><a>Наша команда</a></div>
+        <div class="header-links" id="contacts"><a>Контакты</a></div>
+
+        <div class="header-links" id="user"><a href="login" id="username">Войти</a></div>
+        <script type="text/javascript" src="Scripts/CheckUserName.js"></script>
+    </div>
+    
+    <form>
+        <div class="block" id="ChoseService">
+            <div>Мастер:</div>
+            <div id="ChosenMaster"><a onclick="document.getElementById(&quot;SubmitButton&quot;).scrollIntoView();">Выбрать</a></div>
+            <div id="service">
+                Услуга:
+                <select name="Service">
+                    <option selected disabled>Выберите мастера</option>
+                </select>
+            </div>
+        </div>
+        <div class="block" id="ChoseDateTime">
+            <div id="ChoseDate">Дата: <input type="date" /></div>
+            <div id="ChoseTime">
+                <div>9:00</div>
+                <div id="SelectedTime">9:30</div>
+                <div>10:00</div>
+                <div>10:30</div>
+                <div>11:00</div>
+                <div>11:30</div>
+                <div>12:00</div>
+                <div>12:30</div>
+            </div>
+            <div id="SubmitButton"><input type="button" id="submit-button" value="Записаться" /></div>
+        </div>
+        <div class="block" id="MasterFilter">
+            <div>Фильтр:</div>
+            <select>
+                <option selected disabled>Все</option>
+            </select>
+        </div>
+    </form>
+
+    <div id="MastersList">
+        <div class="block">
+            <div class="block" id="Avatar">
+            </div>
+            <div class="block" id="Info">
+                <div id="Name">Валерия</div>
+                <div id="Specialization">Мастер маникюра</div><br />
+                <input type="button" class="ChoseMasterButton" value="Записаться" />
+            </div>
+        </div>
+    </div>
+</body>
+</html>

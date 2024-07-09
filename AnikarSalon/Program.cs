@@ -161,6 +161,12 @@ app.MapGet("/signup", async (context) =>
     await context.Response.SendFileAsync("wwwroot/signup.html");
 });
 
+app.MapGet("/registration", async (context) =>
+{
+    context.Response.ContentType = "text/html; charset=utf-8";
+    await context.Response.SendFileAsync("wwwroot/appointmentRegistration.html");
+});
+
 app.Run();
 
 string PhoneBuilder(string phoneNumber)

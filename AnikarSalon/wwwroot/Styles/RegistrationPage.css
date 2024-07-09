@@ -1,0 +1,197 @@
+﻿:root {
+    --auth-block-height: 66px;
+    --auth-block-width: 620px;
+}
+
+
+.block {
+    margin: var(--blick-margin);
+    min-height: var(--auth-block-height);
+    width: var(--auth-block-width);
+    background: var(--section-color);
+    box-shadow: var(--section-shadow);
+    border-radius: var(--section-border-radius);
+    border: none;
+    font-size: 20px;
+    text-indent: 1.2em;
+    margin: 13px;
+}
+
+form {
+    min-height: 358px;
+    margin-left: auto;
+    margin-right: auto;
+    top: 0;
+    position: relative;
+    padding: 15px;
+    height: var(--auth-block-height);
+    width: var(--auth-block-width);
+    text-align: center;
+}
+
+form div {
+    padding: 5px;
+}
+
+#ChoseService * {
+    text-indent: 0;
+    left: 0;
+    margin-top: 9px;
+    position: relative;
+    display: inline-block;
+}
+
+#ChoseService #ChosenMaster {
+    left: 0;
+    padding: 0;
+    min-width: 110px;
+    text-indent: 0;
+}
+
+select {
+    font-family: Verdana;
+    font-size: 14px;
+    margin-top: -10px;
+    height: 24px;
+    min-width: 260px;
+}
+
+#ChoseDateTime #ChoseDate {
+    margin-left: auto;
+    margin-right: auto;
+    width: 185px;
+    text-indent: 0;
+    top: calc(50% - 0.9em);
+    position: relative;
+}
+
+#ChoseTime {
+    text-indent: 0;
+}
+
+#ChoseTime * {
+    display: inline-block;
+}
+
+#ChoseTime div {
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+    width: 70px;
+    height: 29px;
+    border: 2px solid rgba(0, 0, 0, 0.4);
+    border-radius: 15px;
+    text-indent: 0;
+    color: rgba(0, 0, 0, 0.5);
+    padding: 0;
+    margin: 3px;
+    text-align: center;
+}
+
+#ChoseTime #SelectedTime {
+    border: 2px solid #C28113;
+    color: #C28113;
+}
+
+#SubmitButton {
+    margin-left: auto;
+    margin-right: auto;
+    text-indent: 0;
+    width: 250px;
+}
+
+input[type="button"] {
+    margin: var(--blick-margin);
+    height: 40px;
+    width: 250px;
+    background: var(--section-color);
+    box-shadow: var(--section-shadow);
+    border-radius: var(--section-border-radius);
+    border: none;
+    font-size: 20px;
+    text-indent: 1em;
+    background: var(--button-color);
+    text-indent: 0px;
+    color: white;
+    padding: 0;
+    margin: 0;
+}
+
+input[type="button"]:hover {
+    cursor: pointer;
+}
+
+input[type="button"]:hover {
+    box-shadow: var(--section-shadow), inset 3px 3px 4px rgba(0, 0, 0, 0.25)
+}
+
+#MasterFilter {
+    margin-top: 30px;
+    min-height: 40px;
+    text-align: left;
+    margin-left: 140px;
+    margin-right: 140px;
+    width: 370px;
+    text-indent: 0.6em;
+}
+
+#MasterFilter div {
+    display: inline-block;
+    margin-top: 2px;
+}
+
+#MasterFilter select {
+    min-width: 220px;
+}
+
+#MastersList {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 1200px;
+    position: relative;
+    text-align: center;
+}
+
+#MastersList * {
+    padding: 0;
+    height: 573px;
+    margin: 5px;
+    max-width: 282px;
+    display: inline-block;
+}
+
+#Avatar {
+    display: flex;
+    margin: 0;
+    height: 373px;
+    width: auto;
+    background: url(https://krkrolik.ru/upload/iblock/50d/csirog7nt6mxcvcirwwfmovgamrz23yn.jpg);
+    background-size: auto 100%;
+    background-position-x: 50%;
+    border: 15px solid var(--section-color);
+}
+
+#Info {
+    display: block;
+    margin: 0;
+    margin-top: 10px;
+    height: 160px;
+    text-indent: 0;
+    font-size: 24px;
+}
+
+#Info * {
+    height: 1em;
+    margin-top: 12px;
+}
+
+#Specialization {
+    font-size: 20px;
+    margin-top: 12px;
+    color: var(--emphasized-text-color);
+}
+
+.ChoseMasterButton {
+    margin: 0;
+    min-height: 56px;
+}
