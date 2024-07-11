@@ -88,7 +88,7 @@ select {
     text-align: center;
 }
 
-#ChoseTime #SelectedTime {
+#ChoseTime .SelectedTime {
     border: 2px solid #C28113;
     color: #C28113;
 }
@@ -119,10 +119,15 @@ input[type="button"] {
 
 input[type="button"]:hover {
     cursor: pointer;
+    box-shadow: var(--section-shadow), inset 3px 3px 4px rgba(0, 0, 0, 0.25)
 }
 
-input[type="button"]:hover {
-    box-shadow: var(--section-shadow), inset 3px 3px 4px rgba(0, 0, 0, 0.25)
+#ChoseTime:hover {
+    cursor: default;
+}
+
+select:hover, input[type="date"]:hover, #ChoseTime div:hover {
+    cursor: pointer;
 }
 
 #MasterFilter {
@@ -149,6 +154,7 @@ input[type="button"]:hover {
     margin-right: auto;
     max-width: 1200px;
     position: relative;
+    margin-top: 30px;
     text-align: center;
 }
 
@@ -194,4 +200,9 @@ input[type="button"]:hover {
 .ChoseMasterButton {
     margin: 0;
     min-height: 56px;
+}
+
+#Name * {
+    color: black;
+    margin: 0;
 }

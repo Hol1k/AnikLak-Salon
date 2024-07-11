@@ -32,6 +32,63 @@ app.UseStaticFiles();
 
 app.UseSession();
 
+app.MapGet("/system/get-masters-list", async (context) =>
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        MastersRepository mastersRepo;
+        var services = scope.ServiceProvider;
+        mastersRepo = services.GetRequiredService<MastersRepository>();
+
+        var mastersList = await mastersRepo.GetAll();
+
+        if (mastersList == null) await context.Response.WriteAsync("none");
+        else
+        {
+            StringBuilder mastersJsonBuild = new StringBuilder("{\"masters\":[");
+            foreach (var master in mastersList)
+            {
+                string masterJson = $"{{\"name\":\"{master.FirstName}\"," +
+                $"\"service\":\"{master.Services[0]}\"," +
+                $"\"id\":\"{master.Id.ToString()}\"," +
+                $"\"avatarUrl\":\"{master.AvatarUrl}\"}},";
+
+                mastersJsonBuild.Append(masterJson);
+            }
+            mastersJsonBuild.Remove(mastersJsonBuild.Length - 1, 1);
+            mastersJsonBuild.Append("]}");
+
+            await context.Response.WriteAsync(mastersJsonBuild.ToString());
+        }
+    }
+});
+
+app.MapPost("/system/check-free-registration-times", async (context) =>
+{
+    string[] temp = { "9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30",
+        "14:00", "14:30",  "15:00", "15:30", "16:00", "16:30", "17:00" };
+    List<string> freeRegistrationTimes = temp.ToList();
+
+    using (var scope = app.Services.CreateScope())
+    {
+        MastersRepository mastersRepo;
+        var services = scope.ServiceProvider;
+        mastersRepo = services.GetRequiredService<MastersRepository>();
+        var requestData = context.Request.Form;
+
+        List<string> occupiedTimes = await mastersRepo.GetFreeRegistrationTimes(
+            requestData["date"].ToString(),
+            requestData["masterId"].ToString());
+
+        foreach (var occupiedTime in occupiedTimes)
+        {
+            freeRegistrationTimes.Remove(occupiedTime);
+        }
+    }
+
+    await context.Response.WriteAsync(String.Join(",", freeRegistrationTimes.ToArray()));
+});
+
 app.MapGet("/system/get-username", async (context) =>
 {
     if (context.Session.Keys.Contains("username"))
@@ -53,7 +110,7 @@ app.MapPost("/system/check-login", async (context) =>
 
         ClientEntity? user = await clientsRepo.Login(
             phoneNumber: PhoneBuilder(loginData["userPhone"].ToString()),
-            password: loginData["password"]);
+            password: loginData["password"].ToString());
 
         if (user != null)
         {
