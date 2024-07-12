@@ -18,23 +18,24 @@
         <script type="text/javascript" src="Scripts/CheckUserName.js"></script>
     </div>
 
-    <form>
+    <form id="form">
         <div class="block" id="ChoseService">
-            <div>Мастер:
-                <a onclick="document.getElementById(&quot;SubmitButton&quot;).scrollIntoView();" name="ChosenMaster" value="none" id="ChosenMaster">Выбрать</a>
+            <div>
+                Мастер:
+                <a onclick="document.getElementById('SubmitButton').scrollIntoView();" name="ChosenMaster" value="none" id="ChosenMaster">Выбрать</a>
             </div>
             <div id="service">
                 Услуга:
-                <select name="ChosenService" id="ServiceSelection" value="">
+                <select name="chosenService" id="ServiceSelection" value="">
                     <option selected disabled>Выберите мастера</option>
                 </select>
             </div>
         </div>
         <div class="block" id="ChoseDateTime">
-            <div id="ChoseDate">Дата: <input type="date" id="ChosenDate" onchange="ChoseDate()"/></div>
+            <div id="ChoseDate">Дата: <input type="date" id="ChosenDate" onchange="ChoseDate()" /></div>
             <div id="ChoseTime" name="ChosenTime" value="">
             </div>
-            <div id="SubmitButton"><input type="button" id="submit-button" value="Записаться" onclick="SubmitRegistration()"/></div>
+            <div id="SubmitButton"><input type="button" id="submit-button" value="Записаться" onclick="SubmitRegistration()" /></div>
         </div>
         <div class="block" id="MasterFilter">
             <div>Фильтр:</div>
@@ -44,6 +45,7 @@
                 <option value="Лешмейкер">Лешмейкер</option>
             </select>
         </div>
+        <input style="position:absolute; top: -40px" />
     </form>
 
     <div id="MastersList">

@@ -1,6 +1,7 @@
 ﻿using AnikarSalon.Persistence.Postgres;
 using AnikarSalon.Persistence.Postgres.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Metadata.Ecma335;
 
 namespace AnikarSalon.DataPersistence.PostgreSQL.Repositories
 {
@@ -38,8 +39,9 @@ namespace AnikarSalon.DataPersistence.PostgreSQL.Repositories
                 TimeOnly appointmentTime = new(appointment.DateTime.Hour, appointment.DateTime.Minute);
                 for (int i = 0; i < appointment.AppointmentDurationByHalfHours; i++)
                 {
-                    occupiedTimes.Append($"{appointmentTime.Hour}:{appointmentTime.Minute}");
-                    appointmentTime.AddMinutes(30);
+                    string regMinute = appointmentTime.Minute == 0 ? "00" : appointmentTime.Minute.ToString();
+                    occupiedTimes.Add($"{appointmentTime.Hour}:{regMinute}");
+                    appointmentTime = appointmentTime.AddMinutes(30);
                 }
             }
 

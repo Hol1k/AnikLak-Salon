@@ -1,7 +1,7 @@
+using AnikarSalon.DataPersistence.PostgreSQL;
 using AnikarSalon.DataPersistence.PostgreSQL.Repositories;
 using AnikarSalon.Persistence.Postgres;
 using AnikarSalon.Persistence.Postgres.Models;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
 
@@ -99,6 +99,13 @@ app.MapGet("/system/get-username", async (context) =>
     else await context.Response.WriteAsync("");
 });
 
+app.MapPost("/system/get-service-price", async (context) =>
+{
+    decimal price;
+    (_, price) = AppointmentData.Get(context.Request.Form["service"].ToString());
+    await context.Response.WriteAsync(price.ToString());
+});
+
 app.MapPost("/system/check-login", async (context) =>
 {
     using (var scope = app.Services.CreateScope())
@@ -172,7 +179,14 @@ app.MapGet("/login", async (context) =>
             {
                 context.Session.SetString("username", user.FirstName ?? "");
                 context.Session.SetString("userId", user.Id.ToString() ?? "");
-                context.Response.Redirect("/");
+
+                if (context.Request.Cookies.ContainsKey("chosenDate")
+                || context.Request.Cookies.ContainsKey("chosenTime")
+                || context.Request.Cookies.ContainsKey("chosenMaster")
+                || context.Request.Cookies.ContainsKey("chosenService"))
+                    context.Response.Redirect("/registration");
+
+                else context.Response.Redirect("/");
             }
             else
             {
@@ -210,7 +224,13 @@ app.MapGet("/signup", async (context) =>
             context.Session.SetString("username", newClient.FirstName ?? "");
             context.Session.SetString("userId", newClient.Id.ToString() ?? "");
 
-            context.Response.Redirect("/");
+            if (context.Request.Cookies.ContainsKey("chosenDate")
+            || context.Request.Cookies.ContainsKey("chosenTime")
+            || context.Request.Cookies.ContainsKey("chosenMaster")
+            || context.Request.Cookies.ContainsKey("chosenService"))
+                context.Response.Redirect("/registration");
+
+            else context.Response.Redirect("/");
         }
     }
 
@@ -220,9 +240,43 @@ app.MapGet("/signup", async (context) =>
 
 app.MapGet("/registration", async (context) =>
 {
+    if (context.Request.Query.Count == 4)
+    {
+        using (var scope = app.Services.CreateScope())
+        {
+            AppointmentsRepository appointmentRepo;
+            var services = scope.ServiceProvider;
+            appointmentRepo = services.GetRequiredService<AppointmentsRepository>();
+            var registrationData = context.Request.Query;
+            if (context.Session.Keys.Contains("userId"))
+            {
+                Console.WriteLine(await appointmentRepo.Registrate(
+                    registrationData["chosenDate"].ToString(),
+                    registrationData["chosenTime"].ToString(),
+                    context.Session.GetString("userId") ?? "",
+                    registrationData["chosenMaster"].ToString(),
+                    registrationData["chosenService"].ToString()));
+
+                if (context.Request.Cookies.ContainsKey("chosenDate")) context.Response.Cookies.Delete("chosenDate");
+                if (context.Request.Cookies.ContainsKey("chosenTime")) context.Response.Cookies.Delete("chosenTime");
+                if (context.Request.Cookies.ContainsKey("chosenMaster")) context.Response.Cookies.Delete("chosenMaster");
+                if (context.Request.Cookies.ContainsKey("chosenService")) context.Response.Cookies.Delete("chosenService");
+
+                context.Response.Redirect("/");
+            }
+            else
+            {
+                context.Response.Cookies.Append("chosenService", registrationData["chosenService"].ToString());
+
+                context.Response.Redirect("/login");
+            }
+        }
+    }
     context.Response.ContentType = "text/html; charset=utf-8";
     await context.Response.SendFileAsync("wwwroot/appointmentRegistration.html");
 });
+
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 app.Run();
 

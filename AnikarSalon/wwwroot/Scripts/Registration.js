@@ -1,6 +1,31 @@
 ﻿(async () => {
     await UpdateMasters('none');
     document.getElementById('ChosenDate').valueAsDate = new Date();
+    setCookie('chosenDate', document.getElementById('ChosenDate').value);
+
+    function getCookie(name) {
+        let matches = document.cookie.match(new RegExp(
+            "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+        ));
+        return matches ? decodeURIComponent(matches[1]) : undefined;
+    }
+
+    if (getCookie('chosenMaster') != undefined) {
+        ChoseMaster(getCookie('chosenMaster'));
+    }
+
+    if (getCookie('chosenDate') != undefined) {
+        document.getElementById('ChosenDate').value = (getCookie('chosenDate'));
+        await ChoseDate();
+    }
+
+    if (getCookie('chosenTime') != undefined) {
+        ChoseTime(getCookie('chosenTime'));
+    }
+
+    if (getCookie('chosenService') != undefined) {
+        document.getElementById('ServiceSelection').setAttribute('value', getCookie('chosenDate'));
+    }
 })();
 
 async function UpdateMasters(filter) {
@@ -58,7 +83,9 @@ let manicureSpecialisation = {
     services: ['Маникюр с дизайном', 'Уходовый']
 }
 
-function ChoseMaster(id) {
+async function ChoseMaster(id) {
+    setCookie('chosenMaster', id);
+
     let chose = document.getElementById('ChosenMaster');
     let master = document.getElementById(id);
     let serviceSelection = document.getElementById('ServiceSelection');
@@ -70,20 +97,26 @@ function ChoseMaster(id) {
     let masterSpecialisation = master.childNodes[1].childNodes[1].innerHTML;
     if (masterSpecialisation == manicureSpecialisation.specialization) { //Услуги мастера маникюра
         serviceSelection.innerHTML = '';
-        let defaultOption = document.createElement('option');
-        defaultOption.setAttribute('selected', '');
-        serviceSelection.appendChild(defaultOption);
-        manicureSpecialisation.services.forEach(service => {
+        manicureSpecialisation.services.forEach(async (service) => {
             let option = document.createElement('option');
-            option.value = service.replace(/ /g, '+');
-            serviceSelection.value = service.replace(/ /g, '+');
-            option.innerHTML = service;
+            option.value = service;
+            serviceSelection.value = service;
+
+            let dataForm = new FormData();
+            dataForm.append("service", service);
+            let responce = await fetch('/system/get-service-price', {
+                method: 'POST',
+                body: dataForm
+            });
+            option.innerHTML = service + ' (' + await responce.text() + '₽)';
             serviceSelection.appendChild(option);
         });
     }
 }
 
 function ChoseTime(time) {
+    setCookie('chosenTime', time);
+
     let timeDiv = document.getElementById(time);
     let timeList = document.getElementById('ChoseTime');
     timeList.childNodes.forEach(node => {
@@ -100,6 +133,7 @@ async function ChoseDate() {
     if (chosenMaster.getAttribute('value') == 'none' || dateNode.value == '') {
         return;
     }
+    setCookie('chosenDate', dateNode.value);
 
     let dataForm = new FormData();
     dataForm.append("date", dateNode.value);
@@ -125,11 +159,54 @@ async function ChoseDate() {
 
 async function SubmitRegistration() {
     let chosenMaster = document.getElementById('ChosenMaster');
-    let chosenService = document.getElementById('ServiceSelection');
     let chosenDate = document.getElementById('ChosenDate');
     let chosenTime = document.getElementById('ChoseTime');
 
     if (chosenMaster.getAttribute('value') == 'none') { alert('Вы не выбрали мастера'); return };
-    if (chosenService.getAttribute('value') == '') { alert('Вы не выбрали услугу'); return };
     if (chosenTime.getAttribute('value') == '') { alert('Вы не выбрали время'); return };
+
+    let form = document.getElementById('form');
+    
+    let chosenMasterInput = document.createElement('input');
+    chosenMasterInput.name = 'chosenMaster';
+    chosenMasterInput.value = chosenMaster.getAttribute('value');
+    chosenMasterInput.style = 'position:absolute; top: -40px';
+    form.appendChild(chosenMasterInput);
+
+    let chosenDateInput = document.createElement('input');
+    chosenDateInput.name = 'chosenDate';
+    chosenDateInput.value = chosenDate.value.toString();
+    chosenDateInput.style = 'position:absolute; top: -40px';
+    form.appendChild(chosenDateInput);
+
+    let chosenTimeInput = document.createElement('input');
+    chosenTimeInput.name = 'chosenTime';
+    chosenTimeInput.value = chosenTime.getAttribute('value');
+    chosenTimeInput.style = 'position:absolute; top: -40px';
+    form.appendChild(chosenTimeInput);
+    
+    form.submit();
+}
+
+function setCookie(name, value, options = {}) {
+
+    options = {
+        path: '/',
+    };
+
+    if (options.expires instanceof Date) {
+        options.expires = options.expires.toUTCString();
+    }
+
+    let updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
+
+    for (let optionKey in options) {
+        updatedCookie += "; " + optionKey;
+        let optionValue = options[optionKey];
+        if (optionValue !== true) {
+            updatedCookie += "=" + optionValue;
+        }
+    }
+
+    document.cookie = updatedCookie;
 }
