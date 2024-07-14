@@ -40,11 +40,17 @@ await MapSystem.GetMastersList(context, app));
 app.MapPost("/system/check-free-registration-times", async (context) =>
 await MapSystem.CheckFreeRegistrationTimes(context, app));
 
+app.MapGet("/system/get-mastername", async (context) =>
+await MapSystem.GetMasterName(context, app));
+
 app.MapGet("/system/get-username", async (context) =>
 await MapSystem.GetUserName(context, app));
 
 app.MapPost("/system/get-service-price", async (context) =>
 await MapSystem.GetServicePrice(context, app));
+
+app.MapPost("/system/check-master-login", async (context) =>
+await MapSystem.CheckMasterLogin(context, app));
 
 app.MapPost("/system/check-login", async (context) =>
 await MapSystem.CheckLogin(context, app));
@@ -54,6 +60,9 @@ await MapSystem.IsNumberOccupied(context, app));
 
 app.MapGet("/system/check-client-appointments", async (context) =>
 await MapSystem.CheckClientAppointments(context, app));
+
+app.MapGet("/system/check-master-appointments", async (context) =>
+await MapSystem.CheckMasterAppointments(context, app));
 
 //Client methods
 app.MapGet("/", async (context) =>
@@ -71,6 +80,15 @@ await MapClient.Profile(context, app));
 app.MapGet("/registration", async (context) =>
 await MapClient.Registration(context, app));
 
-AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+//MasterMethods
+app.MapGet("/master", async (context) =>
+await MapMaster.Index(context, app));
 
+app.MapGet("/master/login", async (context) =>
+await MapMaster.Login(context, app));
+
+app.MapGet("/master/appointments", async (context) =>
+await MapMaster.Appointments(context, app));
+
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 app.Run();

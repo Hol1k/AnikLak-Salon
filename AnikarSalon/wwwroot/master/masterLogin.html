@@ -1,0 +1,23 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../Styles/PageTemplate.css">
+    <link rel="stylesheet" type="text/css" href="../Styles/LoginPage.css">
+    <script type="text/javascript" src="Scripts/isMasterLoginDataValid.js"></script>
+</head>
+<body>
+    <div class="header">
+        <a href="/master"><img src="../Images/Title.png" class="title" /></a>
+        <div class="header-links" id="services"><a href="/master/appointments">Записи</a></div>
+        <div class="header-links" id="gallery"><a>Заказы</a></div>
+    </div>
+
+    <form id="form">
+        <input type="text" name="userPhone" id="userPhone" placeholder="Номер телефона" required /><br />
+        <input type="password" name="password" id="password" placeholder="Пароль" required /><br />
+        <input type="button" id="submit-button" value="Войти" onclick="isMasterLoginDataValid()" />
+    </form>
+</body>
+</html>

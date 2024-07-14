@@ -32,6 +32,8 @@ namespace AnikarSalon.DataPersistence.PostgreSQL.Repositories
             List<string> occupiedTimes = [];
             foreach (var appointment in master.Appointments)
             {
+                if (appointment.Status == "Отменен" || appointment.Status == "Выполнен") continue;
+
                 DateOnly appointmentDate = new(appointment.DateTime.Year, appointment.DateTime.Month, appointment.DateTime.Day);
 
                 if (appointmentDate != date) continue;
@@ -56,6 +58,35 @@ namespace AnikarSalon.DataPersistence.PostgreSQL.Repositories
                 int.Parse(date.Remove(0, 8)));
 
             return await GetFreeRegistrationTimes(formatedDate, masterId);
+        }
+
+        public async Task<MasterEntity?> Login (string phoneNumber, string password)
+        {
+            MasterEntity? master = await _dbContext.Masters
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.PhoneNumber == phoneNumber);
+
+            if (master == null || master.Password != password) return null;
+
+            return master;
+        }
+
+        public async Task<List<AppointmentEntity>> GetAllAppointments(string masterId)
+        {
+            return await GetAllAppointments(Guid.Parse(masterId));
+        }
+
+        public async Task<List<AppointmentEntity>> GetAllAppointments(Guid masterId)
+        {
+            MasterEntity? client = await _dbContext.Masters
+               .AsNoTracking()
+               .Include(c => c.Appointments)
+               .ThenInclude(a => a.Client)
+               .FirstOrDefaultAsync(c => c.Id == masterId);
+
+            if (client == null) return [];
+
+            return client.Appointments.OrderBy(c => c.DateTime).ToList();
         }
     }
 }

@@ -64,6 +64,16 @@ namespace AnikarSalon.MapMethods
             await context.Response.WriteAsync(String.Join(",", freeRegistrationTimes.ToArray()));
         }
 
+        public static async Task GetMasterName(HttpContext context, WebApplication app)
+        {
+            if (context.Session.Keys.Contains("masterName"))
+            {
+                string userName = context.Session.GetString("masterName") ?? "Профиль";
+                await context.Response.WriteAsync(userName);
+            }
+            else await context.Response.WriteAsync("");
+        }
+
         public static async Task GetUserName(HttpContext context, WebApplication app)
         {
             if (context.Session.Keys.Contains("username"))
@@ -105,33 +115,33 @@ namespace AnikarSalon.MapMethods
             }
         }
 
-        public static async Task IsNumberOccupied(HttpContext context, WebApplication app)
+        public static async Task CheckMasterLogin(HttpContext context, WebApplication app)
         {
             using (var scope = app.Services.CreateScope())
             {
-                ClientsRepository clientsRepo;
+                MastersRepository mastersRepo;
                 var services = scope.ServiceProvider;
-                clientsRepo = services.GetRequiredService<ClientsRepository>();
-                var signupData = context.Request.Form;
+                mastersRepo = services.GetRequiredService<MastersRepository>();
+                var loginData = context.Request.Form;
 
-                string phoneNumber = AdditionalMethods.PhoneBuilder(signupData["userPhone"].ToString());
+                MasterEntity? user = await mastersRepo.Login(
+                    phoneNumber: AdditionalMethods.PhoneBuilder(loginData["userPhone"].ToString()),
+                    password: loginData["password"].ToString());
 
-                if (await clientsRepo.IsNumberOccupied(phoneNumber))
+                if (user != null)
                 {
                     await context.Response.WriteAsync("true");
-                    Console.WriteLine("true");
                 }
                 else
                 {
                     await context.Response.WriteAsync("false");
-                    Console.WriteLine("false");
                 }
             }
         }
 
         public static async Task CheckClientAppointments(HttpContext context, WebApplication app)
         {
-            if (context.Session.Keys.Contains("userId"))
+            if (context.Session.Keys.Contains("masterId"))
             {
                 using (var scope = app.Services.CreateScope())
                 {
@@ -164,6 +174,73 @@ namespace AnikarSalon.MapMethods
                     appointmentsJsonBuild.Append("]}");
 
                     await context.Response.WriteAsync(appointmentsJsonBuild.ToString());
+                }
+            }
+        }
+
+        public static async Task CheckMasterAppointments(HttpContext context, WebApplication app)
+        {
+            if (context.Session.Keys.Contains("masterId"))
+            {
+                using (var scope = app.Services.CreateScope())
+                {
+                    MastersRepository mastersRepo;
+                    var services = scope.ServiceProvider;
+                    mastersRepo = services.GetRequiredService<MastersRepository>();
+                    var masterId = context.Session.GetString("masterId");
+
+                    var appointmentsList = await mastersRepo.GetAllAppointments(masterId ?? "");
+
+                    StringBuilder appointmentsJsonBuild = new StringBuilder("{\"appointments\":[");
+                    foreach (var appointment in appointmentsList)
+                    {
+                        string date = appointment.DateTime.Year.ToString() + '-'
+                        + (appointment.DateTime.Month < 10 ? '0' + appointment.DateTime.Month.ToString() : appointment.DateTime.Month) + '-'
+                        + (appointment.DateTime.Day < 10 ? '0' + appointment.DateTime.Day.ToString() : appointment.DateTime.Day) + ' '
+                        + appointment.DateTime.Hour.ToString() + ':'
+                        + (appointment.DateTime.Minute < 10 ? '0' + appointment.DateTime.Minute.ToString() : appointment.DateTime.Minute);
+
+                        string number = appointment.Client.PhoneNumber;
+                        number = "+7" + number.Insert(9, "-").Insert(7, "-").Insert(4, ") ").Insert(1, " (").Remove(0, 1);
+
+                        string appointmentJson = $"{{\"appointmentId\":\"{appointment.Id}\"," +
+                        $"\"client\":\"{appointment.Client.FirstName}\"," +
+                        $"\"number\":\"{number}\"," +
+                        $"\"service\":\"{appointment.AppointmentName}\"," +
+                        $"\"price\":\"{appointment.Price}\"," +
+                        $"\"date\":\"{date}\"," +
+                        $"\"status\":\"{appointment.Status}\"}},";
+
+                        appointmentsJsonBuild.Append(appointmentJson);
+                    }
+                    if (appointmentsList.Count > 0) appointmentsJsonBuild.Remove(appointmentsJsonBuild.Length - 1, 1);
+                    appointmentsJsonBuild.Append("]}");
+
+                    await context.Response.WriteAsync(appointmentsJsonBuild.ToString());
+                }
+            }
+        } 
+
+        public static async Task IsNumberOccupied(HttpContext context, WebApplication app)
+        {
+            using (var scope = app.Services.CreateScope())
+            {
+                ClientsRepository clientsRepo;
+                var services = scope.ServiceProvider;
+                clientsRepo = services.GetRequiredService<ClientsRepository>();
+                var signupData = context.Request.Form;
+
+                string phoneNumber = AdditionalMethods.PhoneBuilder(signupData["userPhone"].ToString());
+
+                if (await clientsRepo.IsNumberOccupied(phoneNumber))
+                {
+                    await context.Response.WriteAsync("true");
+                    Console.WriteLine("true");
+                }
+                else
+                {
+                    await context.Response.WriteAsync("false");
+                    Console.WriteLine("false");
                 }
             }
         }

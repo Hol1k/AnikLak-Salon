@@ -69,5 +69,21 @@ namespace AnikarSalon.DataPersistence.PostgreSQL.Repositories
 
             return newAppointment.Id;
         }
+
+        public async Task UpdateStatus(string appointmentId, string status)
+        {
+            await UpdateStatus(Guid.Parse(appointmentId), status);
+        }
+
+        public async Task UpdateStatus(Guid appointmentId, string status)
+        {
+            await _dbContext.Appointments
+                .AsNoTracking()
+                .Where(a => a.Id == appointmentId)
+                .ExecuteUpdateAsync(s => s
+                    .SetProperty(a => a.Status, status));
+
+            await _dbContext.SaveChangesAsync();
+        }
     }
 }

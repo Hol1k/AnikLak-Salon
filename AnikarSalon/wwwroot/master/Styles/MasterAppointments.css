@@ -1,0 +1,75 @@
+﻿.Legend, .Appointment {
+    margin-top: 15px;
+    position: relative;
+    width: 1214px;
+    height: 35px;
+    left: calc(50% - 1214px/2);
+    top: 10px;
+    background: var(--section-color);
+    box-shadow: var(--section-shadow);
+    border-radius: var(--section-border-radius);
+}
+
+.Legend *, .Appointment * {
+    display: inline-block;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    padding-left: 0.8em;
+    padding-right: 0.8em;
+    border-right: 3px dashed #828282;
+}
+
+.Appointment {
+    height: 55px;
+}
+
+.Appointment * {
+    padding-top: 1.125em;
+    padding-bottom: 1.125em;
+    border-left: 6px solid rgba(0,0,0,0);
+}
+
+.Appointment .clientCol {
+    border-left: 0;
+}
+
+.clientCol {
+    padding-left: 1.3em;
+    min-width: 110px;
+}
+
+.numberCol {
+    padding-left: 1.3em;
+    min-width: 175px;
+}
+
+.serviceCol {
+    width: 294px;
+    word-wrap: break-word;
+}
+
+.priceCol {
+    min-width: 85px;
+    text-align: right; 
+}
+
+.dateCol {
+    min-width: 150px;
+    text-align: right;
+}
+
+.statusCol {
+    border-right: 0;
+    text-align: right;
+    min-width: 185px;
+}
+
+.Appointment .statusCol {
+    height: 1.5em;
+    border-left: 0;
+    border: 0;
+    padding: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-left: 10px;
+}
