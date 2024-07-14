@@ -142,7 +142,7 @@ namespace AnikarSalon.MapMethods
 
                     var appointmentsList = await clientsRepo.GetAllAppointments(userId ?? "");
 
-                    StringBuilder appointmentsJsonBuild = new StringBuilder("{\"appointments\":[");
+                    StringBuilder appointmentsJsonBuild = new StringBuilder($"{{\"name\":\"{context.Session.GetString("username")}\",\"appointments\":[");
                     foreach (var appointment in appointmentsList)
                     {
                         string date = appointment.DateTime.Year.ToString() + '-'

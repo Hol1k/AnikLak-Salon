@@ -6,6 +6,8 @@
 
     let appointmentsList = await response.json();
 
+    document.getElementById('Name').innerHTML = appointmentsList.name;
+
     let appointments = document.getElementById('Appointments');
     appointmentsList.appointments.forEach(appointment => {
         let appointmentDiv = document.createElement('div');
