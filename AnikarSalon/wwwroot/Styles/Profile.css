@@ -1,0 +1,106 @@
+﻿.block {
+    position: relative;
+    width: 596px;
+    height: 66px;
+    left: calc(50% - 596px/2);
+    top: -10px;
+    /* Section Color */
+    background: var(--section-color);
+    box-shadow: var(--section-shadow);
+    border-radius: var(--section-border-radius);
+}
+
+.block *{
+    display: inline-block;
+    margin-top: 1.4em;
+    text-indent: 2em;
+}
+
+#registrateButton {
+    font-family: verdana;
+    font-size: 16px;
+
+    width: 213px;
+    height: 66px;
+
+    position: absolute;
+
+    right: 0;
+
+    /* Button Color */
+    box-shadow: var(--section-shadow);
+    border-radius: var(--section-border-radius);
+    margin-top: 0;
+    border: 0;
+    background: var(--button-color);
+    text-indent: 0px;
+    color: white;
+}
+
+#registrateButton:hover {
+    cursor: pointer;
+}
+
+#registrateButton:hover {
+    box-shadow: var(--section-shadow), inset 3px 3px 4px rgba(0, 0, 0, 0.25)
+}
+
+.Legend, .Appointment {
+    margin-top: 15px;
+    position: relative;
+    width: 1214px;
+    height: 35px;
+    left: calc(50% - 1214px/2);
+    top: -10px;
+    background: var(--section-color);
+    box-shadow: var(--section-shadow);
+    border-radius: var(--section-border-radius);
+}
+
+.Legend *, .Appointment * {
+    display: inline-block;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    padding-left: 0.8em;
+    padding-right: 0.8em;
+    border-right: 3px dashed #828282;
+}
+
+.Appointment {
+    height: 55px;
+}
+
+.Appointment * {
+    padding-top: 1.125em;
+    padding-bottom: 1.125em;
+    border-left: 6px solid rgba(0,0,0,0);
+}
+
+.Appointment .masterCol {
+    border-left: 0;
+}
+
+.masterCol {
+    padding-left: 1.3em;
+    min-width: 170px;
+}
+
+.serviceCol {
+    min-width: 422px;
+}
+
+.priceCol {
+    min-width: 115px;
+    text-align: right; 
+}
+
+.dateCol {
+    min-width: 150px;
+    text-align: right;
+}
+
+.statusCol {
+    border-right: 0;
+    text-align: right;
+    min-width: 185px;
+}

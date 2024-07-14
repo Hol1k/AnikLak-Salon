@@ -9,7 +9,7 @@
         let text = await response.text();
         if (text.length > 0) {
             username.innerHTML = text;
-            username.href = '/';
+            username.href = '/profile';
         }
     }
 })();

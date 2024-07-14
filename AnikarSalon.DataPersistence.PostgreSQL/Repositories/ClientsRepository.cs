@@ -53,5 +53,23 @@ namespace AnikarSalon.DataPersistence.PostgreSQL.Repositories
             if (client != null) return true;
             return false;
         }
+
+        public async Task<List<AppointmentEntity>> GetAllAppointments(string clientId)
+        {
+            return await GetAllAppointments(Guid.Parse(clientId));
+        }
+
+        public async Task<List<AppointmentEntity>> GetAllAppointments(Guid clientId)
+        {
+             ClientEntity? client = await _dbContext.Clients
+                .AsNoTracking()
+                .Include(c => c.Appointments)
+                .ThenInclude(a => a.Master)
+                .FirstOrDefaultAsync(c => c.Id == clientId);
+
+            if (client == null) return [];
+            
+            return client.Appointments.OrderBy(c => c.DateTime).ToList();
+        }
     }
 }

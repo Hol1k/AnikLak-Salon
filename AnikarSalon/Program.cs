@@ -11,7 +11,7 @@ builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
     options.Cookie.Name = "SessionId";
-    options.IdleTimeout = TimeSpan.FromHours(1);
+    options.IdleTimeout = TimeSpan.FromDays(1);
     options.Cookie.IsEssential = true;
 });
 
@@ -154,6 +154,45 @@ app.MapPost("/system/is-number-occupied", async (context) =>
     }
 });
 
+app.MapGet("/system/check-client-appointments", async (context) =>
+{
+    if (context.Session.Keys.Contains("userId"))
+    {
+        using (var scope = app.Services.CreateScope())
+        {
+            ClientsRepository clientsRepo;
+            var services = scope.ServiceProvider;
+            clientsRepo = services.GetRequiredService<ClientsRepository>();
+            var userId = context.Session.GetString("userId");
+
+            var appointmentsList = await clientsRepo.GetAllAppointments(userId ?? "");
+
+            StringBuilder appointmentsJsonBuild = new StringBuilder("{\"appointments\":[");
+            foreach (var appointment in appointmentsList)
+            {
+                string date = appointment.DateTime.Year.ToString() + '-'
+                + (appointment.DateTime.Month < 10 ? '0' + appointment.DateTime.Month.ToString() : appointment.DateTime.Month) + '-'
+                + (appointment.DateTime.Day < 10 ? '0' + appointment.DateTime.Day.ToString() : appointment.DateTime.Day) + ' '
+                + appointment.DateTime.Hour.ToString() + ':'
+                + (appointment.DateTime.Minute < 10 ? '0' + appointment.DateTime.Minute.ToString() : appointment.DateTime.Minute);
+
+                string appointmentJson = $"{{\"appointmentId\":\"{appointment.Id}\"," +
+                $"\"master\":\"{appointment.Master.FirstName}\"," +
+                $"\"service\":\"{appointment.AppointmentName}\"," +
+                $"\"price\":\"{appointment.Price}\"," +
+                $"\"date\":\"{date}\"," +
+                $"\"status\":\"{appointment.Status}\"}},";
+
+                appointmentsJsonBuild.Append(appointmentJson);
+            }
+            if (appointmentsList.Count > 0) appointmentsJsonBuild.Remove(appointmentsJsonBuild.Length - 1, 1);
+            appointmentsJsonBuild.Append("]}");
+
+            await context.Response.WriteAsync(appointmentsJsonBuild.ToString());
+        }
+    }
+});
+
 app.MapGet("/", async (context) =>
 {
     context.Response.ContentType = "text/html; charset=utf-8";
@@ -186,7 +225,7 @@ app.MapGet("/login", async (context) =>
                 || context.Request.Cookies.ContainsKey("chosenService"))
                     context.Response.Redirect("/registration");
 
-                else context.Response.Redirect("/");
+                else context.Response.Redirect("/profile");
             }
             else
             {
@@ -230,12 +269,22 @@ app.MapGet("/signup", async (context) =>
             || context.Request.Cookies.ContainsKey("chosenService"))
                 context.Response.Redirect("/registration");
 
-            else context.Response.Redirect("/");
+            else context.Response.Redirect("/profile");
         }
     }
 
     context.Response.ContentType = "text/html; charset=utf-8";
     await context.Response.SendFileAsync("wwwroot/signup.html");
+});
+
+app.MapGet("/profile", async (context) =>
+{
+    if (!context.Session.Keys.Contains("userId")) context.Response.Redirect("/login");
+    else
+    {
+        context.Response.ContentType = "text/html; charset=utf-8";
+        await context.Response.SendFileAsync("wwwroot/clientProfile.html");
+    }
 });
 
 app.MapGet("/registration", async (context) =>
