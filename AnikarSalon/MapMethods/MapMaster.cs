@@ -45,6 +45,15 @@ namespace AnikarSalon.MapMethods
             await context.Response.SendFileAsync("wwwroot/master/masterLogin.html");
         }
 
+        public static async Task LogOut(HttpContext context, WebApplication app)
+        {
+            context.Session.Remove("masterId");
+            context.Session.Remove("masterName");
+
+            context.Response.Redirect("/master/login");
+            await Task.Yield();
+        }
+
         public static async Task Appointments(HttpContext context, WebApplication app)
         {
             if (context.Request.Query.Count > 0)
@@ -72,6 +81,16 @@ namespace AnikarSalon.MapMethods
                     await context.Response.SendFileAsync("wwwroot/master/masterAppointments.html");
                 }
             }
+        }
+
+        public static async Task Profile(HttpContext context, WebApplication app)
+        {
+            if (context.Session.Keys.Contains("masterId"))
+            {
+                context.Response.ContentType = "text/html; charset=utf-8";
+                await context.Response.SendFileAsync("wwwroot/master/masterProfile.html");
+            }
+            else context.Response.Redirect("/master/login");
         }
     }
 }

@@ -2,6 +2,7 @@
 using AnikarSalon.DataPersistence.PostgreSQL.Repositories;
 using AnikarSalon.Persistence.Postgres.Models;
 using System.Text;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AnikarSalon.MapMethods
 {
@@ -61,7 +62,7 @@ namespace AnikarSalon.MapMethods
                 }
             }
 
-            await context.Response.WriteAsync(String.Join(",", freeRegistrationTimes.ToArray()));
+            await context.Response.WriteAsync(string.Join(",", freeRegistrationTimes.ToArray()));
         }
 
         public static async Task GetMasterName(HttpContext context, WebApplication app)
@@ -242,6 +243,48 @@ namespace AnikarSalon.MapMethods
                     await context.Response.WriteAsync("false");
                     Console.WriteLine("false");
                 }
+            }
+        }
+
+        public static async Task GetMasterInfo(HttpContext context, WebApplication app)
+        {
+            string masterId = "";
+            if (context.Session.Keys.Contains("masterId")) masterId = context.Session.GetString("masterId") ?? "";
+            if (context.Request.Form.Keys.Contains("masterId")) { masterId = context.Request.Form["masterId"].ToString(); }
+            if (masterId == "")
+            {
+                await context.Response.WriteAsync("");
+                return;
+            }
+
+            using (var scope = app.Services.CreateScope())
+            {
+                MastersRepository mastersRepo;
+                var services = scope.ServiceProvider;
+                mastersRepo = services.GetRequiredService<MastersRepository>();
+
+                var master = await mastersRepo.GetById(masterId);
+
+                string masterJson = $"{{\"name\":\"{master.FirstName}\"," +
+                $"\"lastname\":\"{master.LastName}\"," +
+                $"\"exp\":\"{master.YearsExperience}\"," +
+                $"\"service\":\"{master.Services[0]}\"," +
+                $"\"about\":\"{master.About}\"}}";
+
+                await context.Response.WriteAsync(masterJson);
+            }
+        }
+
+        public static async Task UpdateMasterInfo(HttpContext context, WebApplication app)
+        {
+            using (var scope = app.Services.CreateScope())
+            {
+                MastersRepository mastersRepo;
+                var services = scope.ServiceProvider;
+                mastersRepo = services.GetRequiredService<MastersRepository>();
+                var newAbout = context.Request.Form["about"].ToString();
+
+                await mastersRepo.UpdateAbout(context.Session.GetString("masterId").ToString(), newAbout);
             }
         }
     }

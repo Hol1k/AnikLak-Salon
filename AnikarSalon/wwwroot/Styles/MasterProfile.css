@@ -1,0 +1,87 @@
+﻿.block {
+    background: #FAEFDE;
+    border: 18px solid #FAEFDE;
+    box-shadow: 0px 4px 15px 1px rgba(0, 0, 0, 0.25);
+    border-radius: 15px;
+}
+
+#Profile {
+    height: 430px;
+    text-align: center;
+}
+
+#Profile .block {
+    margin: 5px;
+    display: inline-block;
+    height: 430px;
+}
+
+#Avatar {
+    width: 325px;
+    background: url(https://krkrolik.ru/upload/iblock/50d/csirog7nt6mxcvcirwwfmovgamrz23yn.jpg);
+    background-size: auto 100%;
+    background-position-x: 50%;
+    border: 15px solid var(--section-color);
+}
+
+#Info {
+    max-height: 335px;
+    width: 600px;
+    padding: 45px;
+    top: -210px;
+    position: relative;
+}
+
+#Info * {
+    display: flex;
+    position: relative;
+    font-size: 20px;
+}
+
+.EmphasizedText {
+    color: var(--emphasized-text-color);
+}
+
+#Name {
+    font-size: 32px;
+}
+#Exp {
+    margin-top: 15px;
+}
+#Service {
+    margin-top: 15px;
+}
+#Bio {
+    margin-top: 15px;
+    color: rgba(0,0,0,0.6);
+}
+#About * {
+    margin-top: 15px;
+    width: 600px;
+    height: 120px;
+}
+input.centered {
+    height: 120px;
+    vertical-align: top;
+}
+#LogOut {
+    position: absolute;
+    display: block;
+    width: 256px;
+    height: 66px;
+    right: 0;
+    bottom: 0;
+    background: gray;
+    box-shadow: 0px 4px 15px 1px rgba(0, 0, 0, 0.25);
+    border-radius: 15px;
+    border: none;
+    color: white;
+}
+
+#LogOut:hover {
+    cursor: pointer;
+}
+
+#LogOut:hover {
+    box-shadow: var(--section-shadow), inset 3px 3px 4px rgba(0, 0, 0, 0.25)
+}

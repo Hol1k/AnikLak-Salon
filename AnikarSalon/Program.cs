@@ -64,6 +64,12 @@ await MapSystem.CheckClientAppointments(context, app));
 app.MapGet("/system/check-master-appointments", async (context) =>
 await MapSystem.CheckMasterAppointments(context, app));
 
+app.MapPost("/system/get-master-info", async (context) =>
+await MapSystem.GetMasterInfo(context, app));
+
+app.MapPost("/system/update-master-info", async (context) =>
+await MapSystem.UpdateMasterInfo(context, app));
+
 //Client methods
 app.MapGet("/", async (context) =>
 await MapClient.Index(context, app));
@@ -86,6 +92,12 @@ await MapMaster.Index(context, app));
 
 app.MapGet("/master/login", async (context) =>
 await MapMaster.Login(context, app));
+
+app.MapGet("/master/logout", async (context) =>
+await MapMaster.LogOut(context, app));
+
+app.MapGet("/master/profile", async (context) =>
+await MapMaster.Profile(context, app));
 
 app.MapGet("/master/appointments", async (context) =>
 await MapMaster.Appointments(context, app));

@@ -21,6 +21,18 @@ namespace AnikarSalon.DataPersistence.PostgreSQL.Repositories
                 .ToListAsync();
         }
 
+        public async Task<MasterEntity?> GetById(string id)
+        {
+            return await GetById(Guid.Parse(id));
+        }
+
+        public async Task<MasterEntity?> GetById(Guid id)
+        {
+            return await _dbContext.Masters
+                .AsNoTracking()
+                .FirstOrDefaultAsync(m => m.Id == id);
+        }
+
         public async Task<List<string>> GetFreeRegistrationTimes(DateOnly date, string masterId)
         {
             var master = await _dbContext.Masters
@@ -87,6 +99,22 @@ namespace AnikarSalon.DataPersistence.PostgreSQL.Repositories
             if (client == null) return [];
 
             return client.Appointments.OrderBy(c => c.DateTime).ToList();
+        }
+
+        public async Task UpdateAbout(string masterId, string about)
+        {
+            await UpdateAbout(Guid.Parse(masterId), about);
+        }
+
+        public async Task UpdateAbout(Guid masterId, string about)
+        {
+            await _dbContext.Masters
+                .AsNoTracking()
+                .Where(m => m.Id == masterId)
+                .ExecuteUpdateAsync(s => s
+                    .SetProperty(m => m.About, about));
+
+            await _dbContext.SaveChangesAsync();
         }
     }
 }
