@@ -142,7 +142,7 @@ namespace AnikarSalon.MapMethods
 
         public static async Task CheckClientAppointments(HttpContext context, WebApplication app)
         {
-            if (context.Session.Keys.Contains("masterId"))
+            if (context.Session.Keys.Contains("userId"))
             {
                 using (var scope = app.Services.CreateScope())
                 {
