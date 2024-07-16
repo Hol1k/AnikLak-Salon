@@ -3,17 +3,19 @@
 <head>
     <meta charset="utf-8" />
     <title>AnikLak</title>
-    <link rel="stylesheet" type="text/css" href="../Styles/PageTemplate.css">
-    <link rel="stylesheet" type="text/css" href="../Styles/MasterProfile.css">
-    <script charset="utf-8" type="text/javascript" src="Scripts/GetMasterInfo.js"></script>
+    <link rel="stylesheet" type="text/css" href="Styles/PageTemplate.css">
+    <link rel="stylesheet" type="text/css" href="Styles/MasterProfile.css">
 </head>
 <body>
     <div class="header">
-        <a href="/master"><img src="../Images/Title.png" class="title" /></a>
-        <div class="header-links" id="services"><a href="/master/appointments">Записи</a></div>
-        <div class="header-links" id="gallery"><a>Заказы</a></div>
+        <a href="/"><img src="Images/Title.png" class="title" /></a>
+        <div class="header-links" id="services"><a>Услуги</a></div>
+        <div class="header-links" id="gallery"><a>Галерея</a></div>
+        <div class="header-links" id="team"><a>Наша команда</a></div>
+        <div class="header-links" id="contacts"><a>Контакты</a></div>
 
         <div class="header-links" id="user"><a href="login" id="username">Войти</a></div>
+        <script type="text/javascript" src="Scripts/CheckUserName.js"></script>
     </div>
 
     <div id="Profile">
@@ -23,11 +25,11 @@
             <div id="Exp"><div class="EmphasizedText">Стаж работы:&nbsp</div><div id="ExpVar">40</div>&nbspлет</div>
             <div id="Service"><div class="EmphasizedText">Услуги:&nbsp</div><div id="SerVar">Мастер маникюра</div></div>
             <div id="Bio"><img src="../Images/IconInfo.png" style="height: 1em; top: 2px; margin-right: 5px; opacity: 0.6;" />О себе: </div>
-            <form id="About"><textarea form="About" name="about" onblur="UpdateAbout()"></textarea></form>
-            <button id="LogOut" onclick="location.href='/master/logout';">Выйти</button>
+            <div id="About"></div>
+            <button id="Registrate" onclick="Registrate();">Записаться</button>
         </div>
     </div>
-    <script type="text/javascript" src="Scripts/CheckMasterName.js"></script>
+    <script type="text/javascript" src="Scripts/GetMasterInfo.js" charset="windows-1251"></script>
 
     <div id="Comments">
     </div>

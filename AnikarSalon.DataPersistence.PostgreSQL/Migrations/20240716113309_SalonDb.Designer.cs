@@ -13,7 +13,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AnikarSalon.DataPersistence.PostgreSQL.Migrations
 {
     [DbContext(typeof(SalonDbContext))]
-    [Migration("20240709064026_SalonDb")]
+    [Migration("20240716113309_SalonDb")]
     partial class SalonDb
     {
         /// <inheritdoc />
@@ -105,6 +105,10 @@ namespace AnikarSalon.DataPersistence.PostgreSQL.Migrations
 
                     b.Property<Guid>("MasterId")
                         .HasColumnType("uuid");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 

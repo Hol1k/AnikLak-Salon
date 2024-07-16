@@ -137,5 +137,14 @@ namespace AnikarSalon.MapMethods
             context.Response.ContentType = "text/html; charset=utf-8";
             await context.Response.SendFileAsync("wwwroot/appointmentRegistration.html");
         }
+
+        public static async Task Masters(HttpContext context, WebApplication app)
+        {
+            if (context.Request.Query.Keys.Contains("masterId"))
+            {
+                context.Response.ContentType = "text/html; charset=utf-8";
+                await context.Response.SendFileAsync("wwwroot/masterProfile.html");
+            }
+        }
     }
 }

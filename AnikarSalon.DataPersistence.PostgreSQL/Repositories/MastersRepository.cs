@@ -72,7 +72,7 @@ namespace AnikarSalon.DataPersistence.PostgreSQL.Repositories
             return await GetFreeRegistrationTimes(formatedDate, masterId);
         }
 
-        public async Task<MasterEntity?> Login (string phoneNumber, string password)
+        public async Task<MasterEntity?> Login(string phoneNumber, string password)
         {
             MasterEntity? master = await _dbContext.Masters
                 .AsNoTracking()
@@ -115,6 +115,20 @@ namespace AnikarSalon.DataPersistence.PostgreSQL.Repositories
                     .SetProperty(m => m.About, about));
 
             await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<bool> IsClientWas(Guid masterId, Guid clientId)
+        {
+            var master = await _dbContext.Masters
+                .AsNoTracking()
+                .Include(m => m.Appointments)
+                .FirstOrDefaultAsync(m => m.Id == masterId);
+
+            foreach (var appointment in master.Appointments)
+            {
+                if (appointment.ClientId == clientId && appointment.Status == "Выполнен") return true;
+            }
+            return false;
         }
     }
 }

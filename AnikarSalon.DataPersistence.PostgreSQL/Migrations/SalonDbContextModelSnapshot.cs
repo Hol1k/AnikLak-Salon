@@ -103,6 +103,10 @@ namespace AnikarSalon.DataPersistence.PostgreSQL.Migrations
                     b.Property<Guid>("MasterId")
                         .HasColumnType("uuid");
 
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AuthorId");

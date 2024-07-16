@@ -60,6 +60,7 @@ async function UpdateMasters(filter) {
                 infoDiv.appendChild(nameDiv);
 
                     let nameA = document.createElement('a');
+                    nameA.href = '/masters?masterId=' + master.id;
                     nameA.innerHTML = master.name;
                     nameDiv.appendChild(nameA);
 

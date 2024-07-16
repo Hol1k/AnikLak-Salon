@@ -70,6 +70,15 @@ await MapSystem.GetMasterInfo(context, app));
 app.MapPost("/system/update-master-info", async (context) =>
 await MapSystem.UpdateMasterInfo(context, app));
 
+app.MapGet("/system/write-comment", async (context) =>
+await MapSystem.WriteComment(context, app));
+
+app.MapGet("/system/get-comments", async (context) =>
+await MapSystem.GetComments(context, app));
+
+app.MapGet("/system/is-client-was-at-master", async (context) =>
+await MapSystem.IsClientWasAtMaster(context, app));
+
 //Client methods
 app.MapGet("/", async (context) =>
 await MapClient.Index(context, app));
@@ -85,6 +94,9 @@ await MapClient.Profile(context, app));
 
 app.MapGet("/registration", async (context) =>
 await MapClient.Registration(context, app));
+
+app.MapGet("/masters", async (context) =>
+await MapClient.Masters(context, app));
 
 //MasterMethods
 app.MapGet("/master", async (context) =>

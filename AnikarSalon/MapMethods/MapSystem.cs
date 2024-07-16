@@ -153,28 +153,32 @@ namespace AnikarSalon.MapMethods
 
                     var appointmentsList = await clientsRepo.GetAllAppointments(userId ?? "");
 
-                    StringBuilder appointmentsJsonBuild = new StringBuilder($"{{\"name\":\"{context.Session.GetString("username")}\",\"appointments\":[");
-                    foreach (var appointment in appointmentsList)
+                    if (appointmentsList == null) await context.Response.WriteAsync($"{{\"name\":\"{context.Session.GetString("username")}\",\"appointments\":[" + "]}");
+                    else
                     {
-                        string date = appointment.DateTime.Year.ToString() + '-'
-                        + (appointment.DateTime.Month < 10 ? '0' + appointment.DateTime.Month.ToString() : appointment.DateTime.Month) + '-'
-                        + (appointment.DateTime.Day < 10 ? '0' + appointment.DateTime.Day.ToString() : appointment.DateTime.Day) + ' '
-                        + appointment.DateTime.Hour.ToString() + ':'
-                        + (appointment.DateTime.Minute < 10 ? '0' + appointment.DateTime.Minute.ToString() : appointment.DateTime.Minute);
+                        StringBuilder appointmentsJsonBuild = new StringBuilder($"{{\"name\":\"{context.Session.GetString("username")}\",\"appointments\":[");
+                        foreach (var appointment in appointmentsList)
+                        {
+                            string date = appointment.DateTime.Year.ToString() + '-'
+                            + (appointment.DateTime.Month < 10 ? '0' + appointment.DateTime.Month.ToString() : appointment.DateTime.Month) + '-'
+                            + (appointment.DateTime.Day < 10 ? '0' + appointment.DateTime.Day.ToString() : appointment.DateTime.Day) + ' '
+                            + appointment.DateTime.Hour.ToString() + ':'
+                            + (appointment.DateTime.Minute < 10 ? '0' + appointment.DateTime.Minute.ToString() : appointment.DateTime.Minute);
 
-                        string appointmentJson = $"{{\"appointmentId\":\"{appointment.Id}\"," +
-                        $"\"master\":\"{appointment.Master.FirstName}\"," +
-                        $"\"service\":\"{appointment.AppointmentName}\"," +
-                        $"\"price\":\"{appointment.Price}\"," +
-                        $"\"date\":\"{date}\"," +
-                        $"\"status\":\"{appointment.Status}\"}},";
+                            string appointmentJson = $"{{\"appointmentId\":\"{appointment.Id}\"," +
+                            $"\"master\":\"{appointment.Master.FirstName}\"," +
+                            $"\"service\":\"{appointment.AppointmentName}\"," +
+                            $"\"price\":\"{appointment.Price}\"," +
+                            $"\"date\":\"{date}\"," +
+                            $"\"status\":\"{appointment.Status}\"}},";
 
-                        appointmentsJsonBuild.Append(appointmentJson);
+                            appointmentsJsonBuild.Append(appointmentJson);
+                        }
+                        if (appointmentsList.Count > 0) appointmentsJsonBuild.Remove(appointmentsJsonBuild.Length - 1, 1);
+                        appointmentsJsonBuild.Append("]}");
+
+                        await context.Response.WriteAsync(appointmentsJsonBuild.ToString());
                     }
-                    if (appointmentsList.Count > 0) appointmentsJsonBuild.Remove(appointmentsJsonBuild.Length - 1, 1);
-                    appointmentsJsonBuild.Append("]}");
-
-                    await context.Response.WriteAsync(appointmentsJsonBuild.ToString());
                 }
             }
         }
@@ -192,32 +196,36 @@ namespace AnikarSalon.MapMethods
 
                     var appointmentsList = await mastersRepo.GetAllAppointments(masterId ?? "");
 
-                    StringBuilder appointmentsJsonBuild = new StringBuilder("{\"appointments\":[");
-                    foreach (var appointment in appointmentsList)
+                    if (appointmentsList == null) await context.Response.WriteAsync("{\"appointments\":[" + "]}");
+                    else
                     {
-                        string date = appointment.DateTime.Year.ToString() + '-'
-                        + (appointment.DateTime.Month < 10 ? '0' + appointment.DateTime.Month.ToString() : appointment.DateTime.Month) + '-'
-                        + (appointment.DateTime.Day < 10 ? '0' + appointment.DateTime.Day.ToString() : appointment.DateTime.Day) + ' '
-                        + appointment.DateTime.Hour.ToString() + ':'
-                        + (appointment.DateTime.Minute < 10 ? '0' + appointment.DateTime.Minute.ToString() : appointment.DateTime.Minute);
+                        StringBuilder appointmentsJsonBuild = new StringBuilder("{\"appointments\":[");
+                        foreach (var appointment in appointmentsList)
+                        {
+                            string date = appointment.DateTime.Year.ToString() + '-'
+                            + (appointment.DateTime.Month < 10 ? '0' + appointment.DateTime.Month.ToString() : appointment.DateTime.Month) + '-'
+                            + (appointment.DateTime.Day < 10 ? '0' + appointment.DateTime.Day.ToString() : appointment.DateTime.Day) + ' '
+                            + appointment.DateTime.Hour.ToString() + ':'
+                            + (appointment.DateTime.Minute < 10 ? '0' + appointment.DateTime.Minute.ToString() : appointment.DateTime.Minute);
 
-                        string number = appointment.Client.PhoneNumber;
-                        number = "+7" + number.Insert(9, "-").Insert(7, "-").Insert(4, ") ").Insert(1, " (").Remove(0, 1);
+                            string number = appointment.Client.PhoneNumber;
+                            number = "+7" + number.Insert(9, "-").Insert(7, "-").Insert(4, ") ").Insert(1, " (").Remove(0, 1);
 
-                        string appointmentJson = $"{{\"appointmentId\":\"{appointment.Id}\"," +
-                        $"\"client\":\"{appointment.Client.FirstName}\"," +
-                        $"\"number\":\"{number}\"," +
-                        $"\"service\":\"{appointment.AppointmentName}\"," +
-                        $"\"price\":\"{appointment.Price}\"," +
-                        $"\"date\":\"{date}\"," +
-                        $"\"status\":\"{appointment.Status}\"}},";
+                            string appointmentJson = $"{{\"appointmentId\":\"{appointment.Id}\"," +
+                            $"\"client\":\"{appointment.Client.FirstName}\"," +
+                            $"\"number\":\"{number}\"," +
+                            $"\"service\":\"{appointment.AppointmentName}\"," +
+                            $"\"price\":\"{appointment.Price}\"," +
+                            $"\"date\":\"{date}\"," +
+                            $"\"status\":\"{appointment.Status}\"}},";
 
-                        appointmentsJsonBuild.Append(appointmentJson);
+                            appointmentsJsonBuild.Append(appointmentJson);
+                        }
+                        if (appointmentsList.Count > 0) appointmentsJsonBuild.Remove(appointmentsJsonBuild.Length - 1, 1);
+                        appointmentsJsonBuild.Append("]}");
+
+                        await context.Response.WriteAsync(appointmentsJsonBuild.ToString());
                     }
-                    if (appointmentsList.Count > 0) appointmentsJsonBuild.Remove(appointmentsJsonBuild.Length - 1, 1);
-                    appointmentsJsonBuild.Append("]}");
-
-                    await context.Response.WriteAsync(appointmentsJsonBuild.ToString());
                 }
             }
         } 
@@ -250,7 +258,7 @@ namespace AnikarSalon.MapMethods
         {
             string masterId = "";
             if (context.Session.Keys.Contains("masterId")) masterId = context.Session.GetString("masterId") ?? "";
-            if (context.Request.Form.Keys.Contains("masterId")) { masterId = context.Request.Form["masterId"].ToString(); }
+            if (context.Request.Query.Keys.Contains("masterId")) { masterId = context.Request.Query["masterId"].ToString(); }
             if (masterId == "")
             {
                 await context.Response.WriteAsync("");
@@ -269,7 +277,8 @@ namespace AnikarSalon.MapMethods
                 $"\"lastname\":\"{master.LastName}\"," +
                 $"\"exp\":\"{master.YearsExperience}\"," +
                 $"\"service\":\"{master.Services[0]}\"," +
-                $"\"about\":\"{master.About}\"}}";
+                $"\"about\":\"{master.About}\"," +
+                $"\"avatar\":\"{master.AvatarUrl}\"}}";
 
                 await context.Response.WriteAsync(masterJson);
             }
@@ -285,6 +294,82 @@ namespace AnikarSalon.MapMethods
                 var newAbout = context.Request.Form["about"].ToString();
 
                 await mastersRepo.UpdateAbout(context.Session.GetString("masterId").ToString(), newAbout);
+            }
+        }
+
+        public static async Task WriteComment(HttpContext context, WebApplication app)
+        {
+            string userId = context.Session.GetString("userId") ?? "";
+            string masterId = context.Request.Query["masterId"].ToString();
+            string commentText = context.Request.Query["commentText"].ToString();
+
+            using (var scope = app.Services.CreateScope())
+            {
+                CommentsRepository comentsRepo;
+                var services = scope.ServiceProvider;
+                comentsRepo = services.GetRequiredService<CommentsRepository>();
+
+                await comentsRepo.WriteComment(Guid.Parse(masterId), Guid.Parse(userId), commentText);
+            }
+
+            context.Response.Redirect("/masters?masterId=" + masterId);
+        }
+
+        public static async Task GetComments(HttpContext context, WebApplication app)
+        {
+            using (var scope = app.Services.CreateScope())
+            {
+                CommentsRepository comentsRepo;
+                var services = scope.ServiceProvider;
+                comentsRepo = services.GetRequiredService<CommentsRepository>();
+
+                string masterId = "";
+                if (context.Session.Keys.Contains("masterId")) masterId = context.Session.GetString("masterId") ?? "";
+                if (context.Request.Query.Keys.Contains("masterId")) masterId = context.Request.Query["masterId"].ToString();
+
+                var commentsList = await comentsRepo.GetComments(Guid.Parse(masterId));
+
+                if (commentsList == null) await context.Response.WriteAsync("{\"comments\":[" + "]}");
+                else
+                {
+                    StringBuilder commentsJsonBuild = new StringBuilder("{\"comments\":[");
+                    foreach (var comment in commentsList)
+                    {
+                        string date = comment.DateTime.Year.ToString() + '-'
+                        + (comment.DateTime.Month < 10 ? '0' + comment.DateTime.Month.ToString() : comment.DateTime.Month) + '-'
+                        + (comment.DateTime.Day < 10 ? '0' + comment.DateTime.Day.ToString() : comment.DateTime.Day) + ' '
+                        + comment.DateTime.Hour.ToString() + ':'
+                        + (comment.DateTime.Minute < 10 ? '0' + comment.DateTime.Minute.ToString() : comment.DateTime.Minute);
+
+                        string commentJson = $"{{\"commentId\":\"{comment.Id}\"," +
+                        $"\"author\":\"{comment.Author.FirstName}\"," +
+                        $"\"date\":\"{date}\"," +
+                        $"\"comment\":\"{comment.Text}\"}},";
+                        commentsJsonBuild.Append(commentJson);
+                    }
+                    if (commentsList.Count > 0) commentsJsonBuild.Remove(commentsJsonBuild.Length - 1, 1);
+                    commentsJsonBuild.Append("]}");
+
+                    await context.Response.WriteAsync(commentsJsonBuild.ToString());
+                }
+            }
+        }
+
+        public static async Task IsClientWasAtMaster(HttpContext context, WebApplication app)
+        {
+            string masterId = context.Request.Query["masterId"].ToString();
+            string clientId = context.Session.GetString("userId") ?? "";
+
+            using (var scope = app.Services.CreateScope())
+            {
+                MastersRepository mastersRepo;
+                var services = scope.ServiceProvider;
+                mastersRepo = services.GetRequiredService<MastersRepository>();
+                
+                var isClientWas = await mastersRepo.IsClientWas(Guid.Parse(masterId), Guid.Parse(clientId));
+
+                if (isClientWas) await context.Response.WriteAsync("true");
+                else await context.Response.WriteAsync("false");
             }
         }
     }
